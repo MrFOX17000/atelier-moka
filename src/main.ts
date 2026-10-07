@@ -1,5 +1,5 @@
 import "./style.css"
-import { pieces } from "./data/pieces.ts"
+import { pieces, getPieceById } from "./data/pieces.ts"
 import { canBookSlot, maxPeople, slots } from "./data/slots.ts"
 import { clearSavedBooking, createInitialBooking, restoreBooking, saveBooking } from "./state/booking.ts"
 import type { BookingErrors, BookingStep } from "./types.ts"
@@ -8,6 +8,7 @@ import { createInitialFilters, getFilteredPieces, renderFilters } from "./ui/ren
 import { renderPieces } from "./ui/renderPieces.ts"
 import { validateBooking } from "./utils/validation.ts"
 import { toggleFavorite, getFavoriteCount, clearFavorites } from "./state/favorites.ts"
+import { formatPrice } from "./utils/price.ts"
 
 let booking = restoreBooking()
 let currentStep: BookingStep = 1
@@ -198,11 +199,34 @@ function setupPieceSelection(): void {
     if (!(event.target instanceof Element)) return
     const favoriteButton =
       event.target.closest<HTMLButtonElement>("[data-favorite-id]")
-
     if (favoriteButton) {
       const id = Number(favoriteButton.dataset.favoriteId)
       toggleFavorite(id)
       refreshCatalogue()
+      return
+    }
+    const detailsButton = event.target.closest<HTMLButtonElement>("[data-details-id]")
+    if (detailsButton) {
+      const id = Number(detailsButton.dataset.detailsId)
+      const piece = getPieceById(id)
+      if (piece){
+        const dialog = document.querySelector<HTMLDialogElement>("#piece-dialog")
+        const title = document.querySelector<HTMLDialogElement>("#piece-dialog-title")
+        const description = document.querySelector<HTMLDialogElement>("#piece-dialog-description")
+        const price = document.querySelector<HTMLDialogElement>("#piece-dialog-price")
+        if (dialog) {
+          dialog.showModal()
+        }
+        if (title) {
+          title.textContent = piece.name
+        }
+        if (description) {
+          description.textContent = piece.description
+        }
+        if (price) {
+          price.textContent = formatPrice(piece.price)
+        }
+      }
       return
     }
     if (event.target.closest("[data-reset-filters]")) {
@@ -305,11 +329,20 @@ function setupImageFallback(): void {
   }, true)
 }
 
+function setupPieceDialog(): void {
+  const dialog = document.querySelector<HTMLDialogElement>("#piece-dialog")
+  const closeButton = document.querySelector<HTMLButtonElement>("#close-piece-dialog")
+  closeButton?.addEventListener("click", () => {
+    dialog?.close()
+  })
+}
+
 setupImageFallback()
 setupFilters()
 setupPieceSelection()
 setupBooking()
 setupFaq()
 setupNavigation()
+setupPieceDialog()
 refreshCatalogue()
 renderBooking(booking, currentStep)

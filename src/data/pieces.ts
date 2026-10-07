@@ -74,3 +74,7 @@ export const pieces: CeramicPiece[] = [
     featured: false,
   },
 ]
+
+export function getPieceById(id: number): CeramicPiece | undefined {
+  return pieces.find((piece) => piece.id === id)
+}

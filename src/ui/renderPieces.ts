@@ -39,6 +39,7 @@ export function renderPieces(container: HTMLElement, pieces: CeramicPiece[], sel
           <h3>${piece.name}</h3>
           <p class="piece-description">${piece.description}</p>
           <p class="piece-meta"><span>${piece.difficulty}</span><span aria-hidden="true">·</span><span>${piece.estimatedDuration}</span></p>
+          <button type="button" class="piece-details-button" data-details-id="${piece.id}">Voir les détails <span aria-hidden="true">↗</span></button>
           <button type="button" class="piece-select" data-piece-id="${piece.id}" aria-pressed="${selected}" aria-label="${selected ? "Pièce choisie :" : "Choisir"} ${piece.name}" ${!piece.available ? "disabled" : ""}>
             ${!piece.available ? "Bientôt de retour" : selected ? "Pièce choisie" : "Choisir cette pièce"}<span aria-hidden="true">${selected ? "✓" : "↗"}</span>
           </button>
