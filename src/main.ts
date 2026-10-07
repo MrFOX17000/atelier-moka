@@ -211,9 +211,14 @@ function setupPieceSelection(): void {
       const piece = getPieceById(id)
       if (piece){
         const dialog = document.querySelector<HTMLDialogElement>("#piece-dialog")
+        const image = document.querySelector<HTMLImageElement>("#piece-dialog-image")
         const title = document.querySelector<HTMLDialogElement>("#piece-dialog-title")
         const description = document.querySelector<HTMLDialogElement>("#piece-dialog-description")
         const price = document.querySelector<HTMLDialogElement>("#piece-dialog-price")
+        if (image) {
+          image.src = piece.image
+          image.alt = piece.name
+        }
         if (dialog) {
           dialog.showModal()
         }

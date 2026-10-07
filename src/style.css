@@ -242,6 +242,13 @@ select, input { width: 100%; min-height: 47px; padding: 12px 13px; border: 1px s
   color: var(--clay);
 }
 .piece-dialog-eyebrow .icon { width: 21px; height: 21px; }
+#piece-dialog-image {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
 #piece-dialog-title {
   font-size: clamp(28px, 5vw, 38px);
   line-height: 1.2;
