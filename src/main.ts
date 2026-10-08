@@ -212,15 +212,13 @@ function setupPieceSelection(): void {
       if (piece){
         const dialog = document.querySelector<HTMLDialogElement>("#piece-dialog")
         const image = document.querySelector<HTMLImageElement>("#piece-dialog-image")
-        const title = document.querySelector<HTMLDialogElement>("#piece-dialog-title")
-        const description = document.querySelector<HTMLDialogElement>("#piece-dialog-description")
-        const price = document.querySelector<HTMLDialogElement>("#piece-dialog-price")
+        const title = document.querySelector<HTMLElement>("#piece-dialog-title")
+        const description = document.querySelector<HTMLElement>("#piece-dialog-description")
+        const price = document.querySelector<HTMLElement>("#piece-dialog-price")
+        const chooseButton = document.querySelector<HTMLButtonElement>("#choose-dialog-piece")
         if (image) {
           image.src = piece.image
           image.alt = piece.name
-        }
-        if (dialog) {
-          dialog.showModal()
         }
         if (title) {
           title.textContent = piece.name
@@ -230,6 +228,14 @@ function setupPieceSelection(): void {
         }
         if (price) {
           price.textContent = formatPrice(piece.price)
+        }
+        if (chooseButton) {
+          chooseButton.dataset.dialogPieceId = String(piece.id)
+          chooseButton.disabled = !piece.available
+          chooseButton.textContent = piece.available ? "Choisir cette pièce" : "Pièce indisponible"
+        }
+        if (dialog) {
+          dialog.showModal()
         }
       }
       return
@@ -336,6 +342,13 @@ function setupImageFallback(): void {
 
 function setupPieceDialog(): void {
   const dialog = document.querySelector<HTMLDialogElement>("#piece-dialog")
+  const chooseButton = document.querySelector<HTMLButtonElement>("#choose-dialog-piece")
+  chooseButton?.addEventListener("click", () => {
+    if (chooseButton.disabled) return
+    const id = Number(chooseButton.dataset.dialogPieceId)
+    selectPiece(id)
+    dialog?.close()
+  })
   const closeButton = document.querySelector<HTMLButtonElement>("#close-piece-dialog")
   closeButton?.addEventListener("click", () => {
     dialog?.close()
