@@ -115,7 +115,13 @@ input:focus-visible, select:focus-visible { outline-offset: 2px; }
 .section-heading > p { font-size: 12px; color: var(--muted); padding-bottom: 4px; }
 
 .catalogue-section { padding-top: 40px; }
-.catalogue-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 25px; padding-bottom: 23px; border-bottom: 1px solid var(--line); }
+.catalogue-filters { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 20px; padding-bottom: 23px; border-bottom: 1px solid var(--line); }
+.catalogue-search { grid-column: 1 / -1; min-width: 0; }
+.catalogue-search label { display: block; margin-bottom: 9px; font-size: 10px; font-weight: 500; color: var(--muted); }
+.catalogue-search-control { position: relative; }
+.catalogue-search-control .icon { position: absolute; top: 50%; left: 15px; width: 18px; height: 18px; transform: translateY(-50%); color: var(--clay); pointer-events: none; }
+#search-filter { padding-left: 44px; font-size: 13px; }
+#search-filter::placeholder { color: var(--muted); opacity: 1; }
 .difficulty-filters { display: flex; gap: 7px; }
 .difficulty-filters button,
 #favorites-filter {
@@ -139,14 +145,18 @@ input:focus-visible, select:focus-visible { outline-offset: 2px; }
   border-color: var(--coffee);
   color: var(--paper);
 }
-.select-filters { display: flex; gap: 14px; flex-wrap: wrap; }
+.select-filters { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .select-filters > div { display: flex; flex-direction: column; gap: 5px; }
 .select-filters label { color: var(--muted); font-size: 9px; letter-spacing: .5px; }
 select, input { width: 100%; min-height: 47px; padding: 12px 13px; border: 1px solid #bfb0a0; border-radius: 4px; color: var(--coffee); background: var(--paper); font-size: 12px; }
 .select-filters select { min-height: 39px; min-width: 150px; padding: 8px 28px 8px 10px; font-size: 10px; background: transparent; }
-.catalogue-meta { display: flex; align-items: center; gap: 5px; margin-block: 10px 17px; font-size: 11px; color: var(--muted); }
-.reset-filters { font-size: 10px; gap: 10px; margin-left: auto}
+.catalogue-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; margin-block: 10px 17px; font-size: 11px; color: var(--muted); }
+.catalogue-counts { display: flex; align-items: center; gap: 12px; }
+#favorites-count { padding-left: 12px; border-left: 1px solid var(--line); }
+.catalogue-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+.reset-filters { font-size: 10px; gap: 10px; }
 .delete-favorites { font-size: 10px; }
+.delete-favorites:disabled { color: var(--muted); opacity: .55; }
 .pieces { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 31px 24px; }
 .piece-card { min-width: 0; border: 1px solid transparent; border-radius: 5px; cursor: pointer; transition: border-color .2s, background .2s; }
 .piece-card.selected { border-color: var(--clay); background: #f2e7dd; }
@@ -567,12 +577,17 @@ select, input { width: 100%; min-height: 47px; padding: 12px 13px; border: 1px s
   .section-heading > p br { display: none; }
   .catalogue-section { padding-top: 5px; }
   .catalogue-filters { gap: 19px; padding-bottom: 17px; }
+  .catalogue-filters { grid-template-columns: minmax(0, 1fr); }
+  .catalogue-search { grid-column: 1; }
+  #favorites-filter { width: 100%; min-height: 44px; }
+  #search-filter { font-size: 16px; }
   .difficulty-filters { width: 100%; gap: 5px; }
   .difficulty-filters button { flex: 1; padding-inline: 8px; font-size: 9px; white-space: nowrap; }
   .select-filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; width: 100%; }
   .select-filters > div:last-child { grid-column: 1 / -1; }
   .select-filters select { min-width: 0; min-height: 44px; font-size: 10px; }
-  .catalogue-meta { margin-bottom: 14px; }
+  .catalogue-meta { margin-bottom: 14px; gap: 6px; }
+  .catalogue-actions { width: 100%; justify-content: space-between; gap: 4px 10px; }
   .pieces { gap: 24px 12px; }
   .piece-visual img { aspect-ratio: .9; }
   .piece-details { padding: 13px 5px 0; }

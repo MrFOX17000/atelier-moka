@@ -4,6 +4,7 @@ import { pieces } from "../src/data/pieces.ts"
 import { canBookSlot, slots } from "../src/data/slots.ts"
 import { createInitialBooking, saveBooking, restoreBooking, clearSavedBooking } from "../src/state/booking.ts"
 import { createInitialFilters, getFilteredPieces } from "../src/ui/renderFilters.ts"
+import { clearFavorites, toggleFavorite } from "../src/state/favorites.ts"
 import { getToday, isValidBookingDate } from "../src/utils/date.ts"
 import { calculateEstimatedPrice, formatPrice } from "../src/utils/price.ts"
 import { isBookingComplete, isValidEmail, validateBooking } from "../src/utils/validation.ts"
@@ -69,6 +70,44 @@ test("tri des prix et catalogue source conservé", () => {
   filters.sort = "price-desc"
   assert.deepEqual(getFilteredPieces(filters).map((piece) => piece.price), [32, 28, 26, 24, 22, 18])
   assert.deepEqual(pieces.map((piece) => piece.id), originalOrder)
+})
+
+test("recherche : casse et espaces ignorés, aucune correspondance", () => {
+  const filters = createInitialFilters()
+  filters.search = "  VASE  "
+  assert.deepEqual(getFilteredPieces(filters).map((piece) => piece.id), [4])
+  filters.search = "introuvable"
+  assert.deepEqual(getFilteredPieces(filters), [])
+})
+
+test("recherche vide et filtres réinitialisés", () => {
+  const filters = createInitialFilters()
+  filters.search = "   "
+  assert.equal(getFilteredPieces(filters).length, pieces.length)
+  filters.search = "vase"
+  Object.assign(filters, createInitialFilters())
+  assert.equal(filters.search, "")
+  assert.equal(getFilteredPieces(filters).length, pieces.length)
+})
+
+test("recherche combinée à la difficulté, la catégorie et aux favoris", () => {
+  clearFavorites()
+  try {
+    toggleFavorite(4)
+    const filters = createInitialFilters()
+    filters.search = "vase"
+    filters.category = "Vase"
+    filters.difficulty = "Intermédiaire"
+    filters.favoritesOnly = true
+    assert.deepEqual(getFilteredPieces(filters).map((piece) => piece.id), [4])
+    filters.difficulty = "Débutant"
+    assert.deepEqual(getFilteredPieces(filters), [])
+    filters.difficulty = "Tous"
+    clearFavorites()
+    assert.deepEqual(getFilteredPieces(filters), [])
+  } finally {
+    clearFavorites()
+  }
 })
 
 test("les pièces indisponibles sont identifiables", () => {

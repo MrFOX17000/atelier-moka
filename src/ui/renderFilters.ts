@@ -3,7 +3,7 @@ import type { CeramicPiece, PieceFilters } from "../types.ts"
 import { isFavorite } from "../state/favorites.ts"
 
 export function createInitialFilters(): PieceFilters {
-  return { difficulty: "Tous", category: "Tous", availability: "Toutes", sort: "default", favoritesOnly: false }
+  return { difficulty: "Tous", category: "Tous", availability: "Toutes", sort: "default", favoritesOnly: false, search: "" }
 }
 
 export function getFilteredPieces(filters: PieceFilters): CeramicPiece[] {
@@ -13,7 +13,8 @@ export function getFilteredPieces(filters: PieceFilters): CeramicPiece[] {
     const matchesAvailability = filters.availability === "Toutes"
       || (filters.availability === "Disponibles" ? piece.available : !piece.available)
     const matchesFavorites = filters.favoritesOnly === false ? true : isFavorite(piece.id)
-    return matchesDifficulty && matchesCategory && matchesAvailability && matchesFavorites
+    const matchesSearch = piece.name.toLowerCase().includes(filters.search.trim().toLowerCase())
+    return matchesDifficulty && matchesCategory && matchesAvailability && matchesFavorites && matchesSearch
   })
 
   if (filters.sort === "price-asc") filtered.sort((a, b) => a.price - b.price)
@@ -27,10 +28,11 @@ export function renderFilters(filters: PieceFilters): void {
     button.classList.toggle("active", active)
     button.setAttribute("aria-pressed", String(active))
   })
-
+  const search = document.querySelector<HTMLInputElement>("#search-filter")
   const category = document.querySelector<HTMLSelectElement>("#category-filter")
   const availability = document.querySelector<HTMLSelectElement>("#availability-filter")
   const sort = document.querySelector<HTMLSelectElement>("#sort-filter")
+  if (search) search.value = filters.search
   if (category) category.value = filters.category
   if (availability) availability.value = filters.availability
   if (sort) sort.value = filters.sort

@@ -192,6 +192,13 @@ function setupFilters(): void {
     clearFavorites()
     refreshCatalogue()
   })
+  document.querySelector<HTMLInputElement>("#search-filter")
+  ?.addEventListener("input", (event) => {
+    if (!(event.target instanceof HTMLInputElement)) return
+    const value = event.target.value
+    filters.search = value
+    refreshCatalogue()
+  })
 }
 
 function setupPieceSelection(): void {

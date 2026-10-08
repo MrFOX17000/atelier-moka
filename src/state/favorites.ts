@@ -1,4 +1,4 @@
-import { pieces } from "../data/pieces"
+import { pieces } from "../data/pieces.ts"
 
 const favoriteIds: number[] = []
 

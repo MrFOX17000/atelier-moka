@@ -20,6 +20,7 @@ export type PieceFilters = {
   availability: "Toutes" | "Disponibles" | "Indisponibles"
   sort: "default" | "price-asc" | "price-desc"
   favoritesOnly: boolean
+  search: string
 }
 
 export type TimeSlot = {
