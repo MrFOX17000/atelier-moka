@@ -7,6 +7,7 @@ export function isFavorite(id: number): boolean {
 }
 
 export function toggleFavorite(id: number): void {
+    if (!isValidFavoriteId(id)) return
     const position = favoriteIds.indexOf(id)
     if(position === -1){
         favoriteIds.push(id)
@@ -35,7 +36,7 @@ export function loadFavorites(): void {
         const parsed: unknown = JSON.parse(saved)
         if (!Array.isArray(parsed)) return
         for (const value of parsed) {
-            if (typeof value === "number" && Number.isInteger(value) && !favoriteIds.includes(value) && pieces.some((piece) => piece.id === value)) {
+            if (isValidFavoriteId(value) && !favoriteIds.includes(value)) {
                 favoriteIds.push(value)
             }
         }
@@ -48,6 +49,10 @@ export function loadFavorites(): void {
 export function clearFavorites(): void {
     favoriteIds.splice(0, favoriteIds.length)    
     saveFavorites()
+}
+
+function isValidFavoriteId(value: unknown): value is number {
+    return typeof value === "number" && Number.isInteger(value) && pieces.some((piece) => piece.id === value)
 }
 
 loadFavorites()

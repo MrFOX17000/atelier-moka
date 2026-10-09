@@ -1,6 +1,7 @@
 import { pieces } from "../data/pieces.ts"
 import type { CeramicPiece, PieceFilters } from "../types.ts"
 import { isFavorite } from "../state/favorites.ts"
+import { normalizeSearch } from "../utils/search.ts"
 
 export function createInitialFilters(): PieceFilters {
   return { difficulty: "Tous", category: "Tous", availability: "Toutes", sort: "default", favoritesOnly: false, search: "" }
@@ -13,7 +14,8 @@ export function getFilteredPieces(filters: PieceFilters): CeramicPiece[] {
     const matchesAvailability = filters.availability === "Toutes"
       || (filters.availability === "Disponibles" ? piece.available : !piece.available)
     const matchesFavorites = filters.favoritesOnly === false ? true : isFavorite(piece.id)
-    const matchesSearch = piece.name.toLowerCase().includes(filters.search.trim().toLowerCase())
+    const search = normalizeSearch(filters.search)
+    const matchesSearch = normalizeSearch(piece.name).includes(search) || normalizeSearch(piece.description).includes(search)
     return matchesDifficulty && matchesCategory && matchesAvailability && matchesFavorites && matchesSearch
   })
 

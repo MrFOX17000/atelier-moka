@@ -8,6 +8,7 @@ import { clearFavorites, toggleFavorite } from "../src/state/favorites.ts"
 import { getToday, isValidBookingDate } from "../src/utils/date.ts"
 import { calculateEstimatedPrice, formatPrice } from "../src/utils/price.ts"
 import { isBookingComplete, isValidEmail, validateBooking } from "../src/utils/validation.ts"
+import { normalizeSearch } from "../src/utils/search.ts"
 
 const storageKey = "atelier-moka-booking-v1"
 const savedItems = new Map()
@@ -232,5 +233,9 @@ test("stockage bloqué : retour d’erreur sans arrêter le formulaire", () => {
   assert.deepEqual(restoreBooking(), createInitialBooking())
   assert.equal(saveBooking(completeBooking()), false)
   assert.equal(clearSavedBooking(), false)
+})
+
+test("La recherche ignore les accents, la casse et les espaces", () => {
+  assert.equal(normalizeSearch("  CÉRAMIQUE  "), "ceramique")
 })
 
